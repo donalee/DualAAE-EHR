@@ -242,11 +242,12 @@ if __name__ == '__main__':
     parser.add_argument('--max_sequence_length', type=int, default=10)
     parser.add_argument('--max_visit_length', type=int, default=40)
     parser.add_argument('--min_occ', type=int, default=0)
-    parser.add_argument('--test', action='store_true')
-
-    parser.add_argument('-ep', '--epochs', type=int, default=50)
+    
+    parser.add_argument('-ep', '--epochs', type=int, default=500)
     parser.add_argument('-bs', '--batch_size', type=int, default=32)
     parser.add_argument('-lr', '--learning_rate', type=float, default=0.001)
+    parser.add_argument('-gs','--gendata_size', type=int, default=100000)
+    parser.add_argument('-gd', '--gpu_devidx', type=int, default=0)
 
     parser.add_argument('-eb', '--embedding_size', type=int, default=128)
     parser.add_argument('-rnn', '--rnn_type', type=str, default='gru')
@@ -260,13 +261,8 @@ if __name__ == '__main__':
     parser.add_argument('-wd', '--entity_dropout', type=float, default=0.05)
     parser.add_argument('-ed', '--embedding_dropout', type=float, default=0.5)
     parser.add_argument('-fd', '--feature_dropout', type=float, default=0.5)
-
     parser.add_argument('-ga', '--gmlp_archs', nargs='+', type=int, default=[128, 128])
     parser.add_argument('-da', '--dmlp_archs', nargs='+', type=int, default=[256, 128])
-
-    parser.add_argument('-gs','--gendata_size', type=int, default=100000)
-    parser.add_argument('-v','--print_every', type=int, default=100)
-    parser.add_argument('-gd', '--gpu_devidx', type=int, default=0)
 
     parser.add_argument('--dp_sgd', type=bool, default=False)
     parser.add_argument('--noise_multiplier', type=float, default=1)
