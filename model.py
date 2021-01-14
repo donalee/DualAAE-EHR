@@ -337,8 +337,8 @@ class CNN_Discriminator(nn.Module):
 
     def __init__(self, embedding_weight, embedding_dropout, feature_dropout, filter_size, window_sizes):
         super().__init__()
-        self.embedding_weight = embedding_weight
         self.vocab_size, self.embedding_size = embedding_weight.shape
+        self.embedding_weight = nn.Parameter(embedding_weight.data, requires_grad=False)
         self.embedding_dropout = nn.Dropout(p=embedding_dropout)
         self.feature_dropout = nn.Dropout(p=feature_dropout)
 

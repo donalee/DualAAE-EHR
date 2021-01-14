@@ -139,7 +139,7 @@ def main(args):
                     if torch.is_tensor(v):
                         batch[k] = to_var(v)
 
-                one = torch.FloatTensor([1])
+                one = torch.tensor(1, dtype=torch.float)
                 mone = one * -1
 
                 if torch.cuda.is_available():
@@ -153,6 +153,7 @@ def main(args):
                 zgen = G(batch_size=z.size(0))
                 Pgen, Sgen, Mgen = AE.decoder.inference(z=zgen)
 
+                Dx.embedding_weight.data = AE.embedding.weight.data
                 Dinput, Doutput, Dgen = Dx(Pinput).mean(), Dx(Poutput, Moutput).mean(), Dx(Pgen, Mgen).mean()
                 Dreal, Dfake = Dz(z).mean(), Dz(zgen).mean()
 
@@ -160,9 +161,7 @@ def main(args):
                 zCritic_loss = - Dreal + Dfake
                 
                 if split == 'train':
-                    # Step 1: Update the Critic_x (while freezing the entity embedding matrix)
-                    Dx.embedding_weight.requires_grad = False
-
+                    # Step 1: Update the Critic_x
                     opt_dix.zero_grad()
                     Dinput, Doutput = Dx(Pinput).mean(), Dx(Poutput, Moutput).mean()
                     Dinput.backward(mone, retain_graph=True)
@@ -176,8 +175,6 @@ def main(args):
                     Dgen.backward(one, retain_graph=True)
                     Dx.cal_gradient_penalty(Pinput[:, :Pgen.size(1), :], Pgen, Mgen).backward()
                     opt_dix.step()
-
-                    Dx.embedding_weight.requires_grad = True
                         
                     # Step 2: Update the Critic_z
                     opt_diz.zero_grad()
@@ -187,21 +184,20 @@ def main(args):
                     Dz.cal_gradient_penalty(z, zgen).backward()
                     opt_diz.step()
 
-                    # Step 3: Update the Decoder
+                    # Step 3, 4: Update the Decoder and the Encoder
                     opt_dec.zero_grad()
                     Doutput, Dgen = Dx(Poutput, Moutput).mean(), Dx(Pgen, Mgen).mean()
                     Doutput.backward(mone, retain_graph=True)
                     Dgen.backward(mone, retain_graph=True)
-                    NLL_loss.backward(retain_graph=True)
-                    opt_dec.step()
- 
-                    # Step 4: Update the Encoder
+                    
                     opt_enc.zero_grad()
                     Dreal = Dz(z).mean()
                     Dreal.backward(one, retain_graph=True)
+
                     NLL_loss.backward(retain_graph=True)
+                    opt_dec.step()
                     opt_enc.step()
-                     
+ 
                     # Step 5: Update the Generator
                     opt_gen.zero_grad()
                     Dfake = Dz(zgen).mean()
