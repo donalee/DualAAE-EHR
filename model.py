@@ -143,7 +143,7 @@ class Decoder(nn.Module):
         # required for dynamic stopping of sentence generation
         sequence_idx = torch.arange(0, batch_size, out=self.tensor()).long() # all idx of batch
         sequence_running = torch.arange(0, batch_size, out=self.tensor()).long() # all idx of batch which are still generating
-        sequence_mask = torch.ones(batch_size, out=self.tensor()).byte()
+        sequence_mask = torch.ones(batch_size, out=self.tensor()).bool()
         sequence_length = torch.zeros(batch_size, out=self.tensor()).long()
 
         running_seqs = torch.arange(0, batch_size, out=self.tensor()).long() # idx of still generating sequences with respect to current loop
