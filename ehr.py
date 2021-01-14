@@ -96,8 +96,8 @@ class EHR(Dataset):
             self._load_vocab()
 
         data = defaultdict(dict)
-        patients = np.load(self.raw_data_path)[()]
-        clean_patients = np.load(os.path.join(self.data_dir, 'ehr.valid.npy'))[()]
+        patients = np.load(self.raw_data_path, allow_pickle=True)[()]
+        clean_patients = np.load(os.path.join(self.data_dir, 'ehr.valid.npy'), allow_pickle=True)[()]
 
         for patient in patients.keys():
             visits = patients[patient]                
@@ -153,7 +153,7 @@ class EHR(Dataset):
             i2w[len(w2i)] = st
             w2i[st] = len(w2i)
 
-        patients = np.load(self.raw_data_path)[()]
+        patients = np.load(self.raw_data_path, allow_pickle=True)[()]
         
         for patient in patients.keys():
             for visit in patients[patient]:
