@@ -81,5 +81,14 @@ Argument | Description
 
 ## Citation
 ```
-  to be updated
+  @article{lee2020generating,
+    author = {Lee, Dongha and Yu, Hwanjo and Jiang, Xiaoqian and Rogith, Deevakar and Gudala, Meghana and Tejani, Mubeen and Zhang, Qiuchen and Xiong, Li},
+    title = {Generating sequential electronic health records using dual adversarial autoencoder},
+    journal = {Journal of the American Medical Informatics Association},
+    volume = {27},
+    number = {9},
+    pages = {1411-1419},
+    year = {2020},
+    month = {09}
+}
 ```
